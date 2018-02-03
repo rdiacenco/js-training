@@ -1,5 +1,6 @@
 # Prerequisities
 - Node.JS: https://nodejs.org - Used as webserver
+- A text editor of your choice. Recommended: Atom, SublimeText, VisualStudio Code
 - (Optional) Git: https://git-scm.com/
 - (Optional) Github account: https://github.com/
 
