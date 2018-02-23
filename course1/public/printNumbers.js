@@ -15,8 +15,8 @@
  *
  */
 function printNumbers(upperLimitNo) {
-    for(var i = 1; i <= upperLimitNo; i++) {
-        var printMessage = i;
+    for(let i = 1; i <= upperLimitNo; i++) {
+        let printMessage = i;
         if(i % 3 === 0) {
             printMessage = 'Java';
             if(i % 5 === 0) {
