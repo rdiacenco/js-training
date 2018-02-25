@@ -13,10 +13,13 @@ let updateWord = function(word){
 let updateScore = function(newScore){
     $('#staticScore').val(newScore);
 };
-// function to update score function
+// function to update fail tries function
 let updateFailTriesCount = function(fails){
+  if(fails >= 0) {
     $('#staticTries').val(fails);
+  }
 };
+
 // function to show a popover
 let showPopover = function($element, message) {
   $element.popover({
@@ -30,28 +33,44 @@ let showPopover = function($element, message) {
 };
 
 let guessLetter = function(game){
+
   let guessedLetter = $('#inputLetter').val();
   // check the input of the letter
   if (game.isValidLetter(guessedLetter)) {
     // TODO guess letter
-    let letterIsGuessed = false;
+    let letterIsGuessed = game.guessLetter(guessedLetter);
     if (letterIsGuessed) {
       // TODO update the view with the new word state
-      // TODO update the score
       showPopover($('#word'), 'Word updated!');
+      updateWord(game.getCurrentStateWord());
       $('#inputLetter').val('').focus();
+      // TODO update the score
+      updateScore(game.getScore());
     } else {
       // TODO update the trial count
+      updateFailTriesCount(game.getLeftFailTries());
       showPopover($('#inputLetter'), 'The letter was incorrect!');
       $('#inputLetter').focus().select();
     }
     let wordIsGuessed = false; // TODO check if the word is guessed
     let gameIsOver = false; // TODO check if the game is over
-    if (wordIsGuessed) {
-
-    } else if (gameIsOver) {
-
+    if(game.getLeftFailTries() === 0) {
+      gameIsOver = true;
     }
+
+    if(game.getCurrentStateWord().indexOf('_') === -1) {
+      wordIsGuessed = true;
+    }
+
+    if (wordIsGuessed) {
+      clearInterval(game.countdown());
+      $(".game-over").css('color', 'green').text("YOU GUESSED THE WORD!").show();
+      $('#guess').prop('disabled', true);
+    } else if (gameIsOver) {
+      $(".game-over").css('color', 'red').text("GAME OVER!").show();
+      $('#guess').prop('disabled', true);
+    }
+
   } else {
     showPopover($('#inputLetter'), 'The input is not a valid letter');
     $('#inputLetter').focus().select();
@@ -62,6 +81,7 @@ function startGame(game) {
   // guess button click handler
   $('#guess').click(function(){
     guessLetter(game);
+
   });
   // keyup event on the input (detect enter)
   $('#inputLetter').keyup(function(e){
